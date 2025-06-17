@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-const API_URL = process.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL;
+const BASE_API_URL = import.meta.env.VITE_BASE_API_URL;
 
 const SponsorPage = () => {
   const navigate = useNavigate();

@@ -3,9 +3,9 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { CheckIcon } from '@heroicons/react/24/outline';
 import { loadStripe } from '@stripe/stripe-js';
 
-// Initialize Stripe
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 const API_URL = import.meta.env.VITE_API_URL;
+const BASE_API_URL = import.meta.env.VITE_BASE_API_URL;
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 // Features for both plans
 const features = {
@@ -95,7 +95,18 @@ const PlanDetailsPage = () => {
     setError(null);
 
     try {
-      // console.log('API URL:', API_URL);
+      // Get sponsor email from localStorage
+      const sponsorData = JSON.parse(localStorage.getItem('sponsorData') || '{}');
+      const savedPlan = JSON.parse(localStorage.getItem('selectedPlan'));
+
+    
+      const sponsorEmail = sponsorData.email;
+
+      if (!sponsorEmail) {
+        setError('Sponsor email not found. Please register as a sponsor first.');
+        return;
+      }
+
       const payload = {
         planId: plan.id,
         planName: plan.name,
@@ -107,9 +118,10 @@ const PlanDetailsPage = () => {
         metadata: {
           plan_id: plan.id,
           plan_name: plan.name,
-          plan_duration: plan.duration,
+          duration_id: savedPlan.duration_id,
+          beneficiary_count: plan.numberOfDependents,
+          sponsor_email: sponsorEmail,
         },
-
       };
       // console.log('Sending payload:', payload);
 

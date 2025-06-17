@@ -8,6 +8,7 @@ import tagger from "@dhiwise/component-tagger";
 export default defineConfig(({ command, mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   const isProduction = mode === 'production';
+  const baseApiUrl = isProduction ? 'https://onewellapp.com/v1' : '/api';
 
   return {
     plugins: [react(), tagger()],
@@ -43,8 +44,9 @@ export default defineConfig(({ command, mode }) => {
       }
     },
     define: {
-      'process.env.VITE_API_URL': JSON.stringify(isProduction ? 'https://onewellapp.com/v1' : '/api'),
-      'process.env.VITE_STRIPE_PUBLISHABLE_KEY': JSON.stringify(env.VITE_STRIPE_PUBLISHABLE_KEY)
+      'process.env.VITE_API_URL': JSON.stringify(baseApiUrl),
+      'process.env.VITE_STRIPE_PUBLISHABLE_KEY': JSON.stringify(env.VITE_STRIPE_PUBLISHABLE_KEY),
+      'process.env.VITE_BASE_API_URL': JSON.stringify('https://onewellapp.com')
     }
   };
 });

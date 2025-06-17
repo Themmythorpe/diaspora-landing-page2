@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { countries } from '../../../utils/countries';
 
 const API_URL = import.meta.env.VITE_API_URL;
+const BASE_API_URL = import.meta.env.VITE_BASE_API_URL;
 
 const INITIAL_FORM_STATE = {
   firstName: '',
@@ -137,13 +138,20 @@ const BeneficiaryForm = ({ index, onRemove, isRemovable, formData, onChange, err
   return (
     <div className="space-y-6">
       {index == 0 && (
-        <div className='flex justify-start items-center pt-4 mb-10'>
+        <div className='flex flex-col justify-between items-start pt-4 mb-5'>
           <img src="/photos/hero_img.png" alt="logo" className='h-8' />
+          
+          <div className='flex items-center gap-2 mt-8'>
+              <span className='text-sm text-[#025F4C]'>Beneficiary {index + 1}</span>
+            </div>
         </div>
       )}
       {index > 0 && (
         <div className="border-t border-[#E6F4EA] pt-6 mt-8 mb-6">
-          <div className="flex justify-end items-center mb-6">
+          <div className="flex justify-between items-center mb-6">
+            <div className='flex items-center gap-2'>
+              <span className='text-sm text-[#025F4C]'>Beneficiary {index + 1}</span>
+            </div>
             {isRemovable && (
               <button
                 onClick={() => onRemove(index)}

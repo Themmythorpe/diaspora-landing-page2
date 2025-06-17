@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
+const API_URL = import.meta.env.VITE_API_URL;
+const BASE_API_URL = import.meta.env.VITE_BASE_API_URL;
+
 const checkIcon = (
   <svg
     className="inline-block w-5 h-5 mr-2 text-[#F37436] translate-x-1"
@@ -40,7 +43,8 @@ const PricingSection = () => {
 
   const fetchPlans = async () => {
     try {
-      const response = await fetch('/api/all-plans?diaspora=true');
+      const url = `${API_URL}/all-plans?diaspora=true`;
+      const response = await fetch(url);
       const data = await response.json();
 
       if (data.statusCode === 200) {
@@ -55,6 +59,7 @@ const PricingSection = () => {
         setError('Failed to fetch plans');
       }
     } catch (err) {
+      console.error('Error fetching plans:', err);
       setError('Failed to fetch plans');
     } finally {
       setLoading(false);
@@ -122,7 +127,7 @@ const PricingSection = () => {
       </div>
     );
   }
-3
+
   return (
     <section
       id="pricing"
