@@ -34,15 +34,15 @@ const ChoosePlanPage = () => {
       try {
         const parsedPlans = JSON.parse(savedPlans);
         const parsedSelectedPlan = JSON.parse(savedPlan);
-        console.log('Retrieved plans from localStorage:', parsedPlans);
-        console.log('Retrieved selected plan from localStorage:', parsedSelectedPlan);
+        // console.log('Retrieved plans from localStorage:', parsedPlans);
+        // console.log('Retrieved selected plan from localStorage:', parsedSelectedPlan);
         
         setPlans(parsedPlans);
         
         // Find the matching plan from our plans array using the id
         const matchingPlan = parsedPlans.find(p => p.id === parsedSelectedPlan.id);
         if (matchingPlan) {
-          console.log('Found matching plan:', matchingPlan);
+          // console.log('Found matching plan:', matchingPlan);
           
           // Set the full plan object with additional data
           const updatedPlan = {
@@ -52,7 +52,7 @@ const ChoosePlanPage = () => {
             selectedDurationId: parsedSelectedPlan.selectedDurationId
           };
           
-          console.log('Setting selected plan:', updatedPlan);
+          // console.log('Setting selected plan:', updatedPlan);
           setSelectedPlan(updatedPlan);
           setDuration(parsedSelectedPlan.duration);
           setNumberOfDependents(parsedSelectedPlan.numberOfDependents);

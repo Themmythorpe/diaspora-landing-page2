@@ -55,7 +55,7 @@ const PlanDetailsPage = () => {
         const parsedPlan = JSON.parse(savedPlan);
         const parsedAllPlans = JSON.parse(savedAllPlans);
 
-        console.log('parsedAllPlans',parsedAllPlans[0]);
+        // console.log('parsedAllPlans',parsedAllPlans[0]);
         
         // Find the full plan data from allPlans
         const fullPlanData = parsedAllPlans.find(p => p.id === parsedPlan.id);
@@ -69,7 +69,7 @@ const PlanDetailsPage = () => {
           // description: fullPlanData?.description !== null ?  'Your eyes, ears and hands for 360 healthcare for mama and papa'
         };
 
-        console.log('mergedPlan',mergedPlan);
+        // console.log('mergedPlan',mergedPlan);
 
         setPlan(mergedPlan);
         setAllPlans(parsedAllPlans);
@@ -95,7 +95,7 @@ const PlanDetailsPage = () => {
     setError(null);
 
     try {
-      console.log('API URL:', API_URL);
+      // console.log('API URL:', API_URL);
       const payload = {
         planId: plan.id,
         planName: plan.name,
@@ -111,7 +111,7 @@ const PlanDetailsPage = () => {
         },
 
       };
-      console.log('Sending payload:', payload);
+      // console.log('Sending payload:', payload);
 
       const response = await fetch(`${API_URL}/create-checkout-session`, {
         method: 'POST',
@@ -130,7 +130,7 @@ const PlanDetailsPage = () => {
         throw new Error('Received non-JSON response from server');
       }
 
-      console.log('Checkout Session Response:', data);
+      // console.log('Checkout Session Response:', data);
 
       if (!response.ok) {
         throw new Error(data?.message || `Request failed with status ${response.status}`);

@@ -481,7 +481,7 @@ const AddBeneficiaryPage = () => {
         beneficiaries: beneficiaryData
       };
 
-      console.log('Submitting data:', payload);
+      // console.log('Submitting data:', payload);
 
       const response = await fetch(`${API_URL}/add-beneficiary`, {
         method: 'POST',

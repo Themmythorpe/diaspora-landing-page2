@@ -39,8 +39,8 @@ const SponsorPage = () => {
         // diaspora: true
       };
 
-      console.log('API URL:', API_URL);
-      console.log('Sending payload:', payload);
+      // console.log('API URL:', API_URL);
+      // console.log('Sending payload:', payload);
 
       const response = await fetch(`${API_URL}/sponsor`, {
         method: 'POST',
@@ -59,7 +59,7 @@ const SponsorPage = () => {
         throw new Error('Received non-JSON response from server');
       }
 
-      console.log('Sponsor Response:', data);
+      // console.log('Sponsor Response:', data);
 
       if (!response.ok) {
         throw new Error(data?.message || `Request failed with status ${response.status}`);

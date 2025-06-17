@@ -12,7 +12,7 @@ const PaymentSuccessPage = () => {
 
     if (sessionId) {
       // You could verify the payment status here with your backend if needed
-      console.log('Payment session ID:', sessionId);
+      // console.log('Payment session ID:', sessionId);
     }
 
     // Store payment success status
