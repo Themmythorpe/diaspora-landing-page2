@@ -4,21 +4,23 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "start": "vite",
+    "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "serve": "vite preview",
+    "start": "vite",
     "format": "prettier --write \"src/**/*.{js,jsx,css,md,json}\""
   },
   "dependencies": {
     "@dhiwise/component-tagger": "^1.0.3",
     "@heroicons/react": "^2.2.0",
+    "@stripe/stripe-js": "^7.3.1",
     "@tailwindcss/typography": "^0.5.16",
+    "axios": "^1.10.0",
     "heroicons": "^2.2.0",
     "prop-types": "^15.8.1",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "react-router-dom": "^7.4.1"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.22.3"
   },
   "devDependencies": {
     "@types/react": "^19.0.10",

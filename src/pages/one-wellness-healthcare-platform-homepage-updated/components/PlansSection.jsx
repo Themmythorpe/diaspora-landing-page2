@@ -1,190 +1,264 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const PlansSection = () => {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-  const [isTransitioning, setIsTransitioning] = useState(false);
-  const slideInterval = useRef(null);
-  const slideContainerRef = useRef(null);
-  
-  const originalSlides = [
-    {
-      id: 1,
-      image: "/images/img_frame_1618869272.png",
-      alt: "Happy employee giving peace sign"
-    },
-    {
-      id: 2,
-      image: "/images/img_frame_1618869273.png",
-      alt: "Smiling employee in orange shirt"
-    },
-    {
-      id: 3,
-      image: "/images/img_frame_1618869274.png",
-      alt: "Happy couple outdoors"
-    },
-    {
-      id: 4,
-      image: "/images/img_frame_1618869275.png",
-      alt: "Man speaking to camera"
-    }
-  ];
-
-  // Create a duplicated array of slides for infinite scroll
-  const slides = [...originalSlides, ...originalSlides];
-
-  const startSlideTimer = () => {
-    stopSlideTimer();
-    slideInterval.current = setInterval(() => {
-      moveNext();
-    }, 3000);
-  };
-
-  const stopSlideTimer = () => {
-    if (slideInterval.current) {
-      clearInterval(slideInterval.current);
-    }
-  };
-
-  const moveNext = () => {
-    setIsTransitioning(true);
-    setCurrentSlide(prev => prev + 1);
-  };
-
-  // Calculate slide width based on screen size
-  const getSlideWidth = () => {
-    if (typeof window !== 'undefined') {
-      if (window.innerWidth < 576) return 100; // 1 slide
-      if (window.innerWidth < 768) return 50;  // 2 slides
-      return 25; // 4 slides
-    }
-    return 25; // Default to 4 slides
-  };
-
-  // Handle the transition end and reset position if needed
-  useEffect(() => {
-    if (currentSlide >= originalSlides.length) {
-      const timer = setTimeout(() => {
-        setIsTransitioning(false);
-        setCurrentSlide(0);
-      }, 700);
-      return () => clearTimeout(timer);
-    }
-  }, [currentSlide]);
+const PlanCard = ({ title, price, features, type, onSelect, selectedPlanData }) => {
+  const [dependents, setDependents] = useState(1);
+  const [duration, setDuration] = useState(type === 'health-visit' ? 1 : 6);
+  const basePrice = price;
 
   useEffect(() => {
-    startSlideTimer();
-    return () => stopSlideTimer();
-  }, []);
+    // Set initial duration based on selected plan
+    if (selectedPlanData && selectedPlanData.planName === title) {
+      const durationMonths = selectedPlanData.durationName.includes('annually') 
+        ? 12 
+        : selectedPlanData.durationName.includes('bi-annually')
+          ? 6
+          : selectedPlanData.durationName.includes('bi-monthly')
+            ? 2
+            : 1;
+      setDuration(durationMonths);
+    }
+  }, [selectedPlanData, title]);
 
-  const handleMouseEnter = () => {
-    setIsPaused(true);
-    stopSlideTimer();
+  const handleDependentChange = (change) => {
+    const newValue = dependents + change;
+    if (newValue >= 1) {
+      setDependents(newValue);
+    }
   };
 
-  const handleMouseLeave = () => {
-    setIsPaused(false);
-    startSlideTimer();
+  const handleDurationChange = (change) => {
+    if (type === 'health-visit') {
+      const newValue = duration + change;
+      if (newValue >= 1 && newValue <= 6) {
+        setDuration(newValue);
+      }
+    } else {
+      setDuration(change === 1 ? 12 : 6);
+    }
+  };
+
+  const calculateTotalPrice = () => {
+    const dependentPrice = basePrice * 0.5 * (dependents - 1); // 50% of base price per additional dependent
+    return (basePrice + dependentPrice) * (duration / (type === 'health-visit' ? 2 : 6)); // Normalize duration price
   };
 
   return (
-    <section className="pt-20 pb-10 bg-white overflow-hidden">
-      <div className="max-w-[1400px] mx-auto px-4">
-        <div className="text-center mb-12">
-          <div className="flex justify-center items-center mb-2">
-            <img src="/images/img_svg.svg" alt="Icon" className="w-6 h-6 mr-2" />
-            <p className="text-[#f6921e] font-bold font-['Kalam']">Health Insurance your employees will use</p>
+    <div className="bg-white rounded-2xl p-6 shadow-lg border border-[#E6F4EA]">
+      <h3 className="text-2xl font-bold text-[#025F4C] mb-4">{title}</h3>
+      <div className="mb-6">
+        <span className="text-4xl font-bold text-[#3DA647]">₦{calculateTotalPrice().toLocaleString()}</span>
+        <span className="text-[#8b909a]">/total</span>
+      </div>
+
+      <div className="space-y-6 mb-8">
+        <div>
+          <label className="block text-sm font-medium text-[#025F4C] mb-2">
+            Number of Dependents
+          </label>
+          <div className="flex items-center space-x-4">
+            <button
+              onClick={() => handleDependentChange(-1)}
+              disabled={dependents <= 1}
+              className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                dependents <= 1 ? 'bg-gray-200 text-gray-400' : 'bg-[#E6F4EA] text-[#3DA647] hover:bg-[#3DA647] hover:text-white'
+              }`}
+            >
+              -
+            </button>
+            <span className="text-lg font-medium text-[#025F4C]">{dependents}</span>
+            <button
+              onClick={() => handleDependentChange(1)}
+              className="w-8 h-8 rounded-full bg-[#E6F4EA] text-[#3DA647] hover:bg-[#3DA647] hover:text-white flex items-center justify-center"
+            >
+              +
+            </button>
           </div>
-          
-          <h2 className="text-[#1a3a4f] text-3xl md:text-5xl font-bold mb-8 max-w-2xl mx-auto">
-            Healthcare plan that{" "}
-            <span className="bg-gradient-to-r from-[#3da647] to-[#f6921e] text-transparent bg-clip-text">
-              actually
-            </span>{" "}
-            works well for you
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-[#025F4C] mb-2">
+            Duration
+          </label>
+          {type === 'health-visit' ? (
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={() => handleDurationChange(-1)}
+                disabled={duration === 1}
+                className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                  duration === 1 ? 'bg-gray-200 text-gray-400' : 'bg-[#E6F4EA] text-[#3DA647] hover:bg-[#3DA647] hover:text-white'
+                }`}
+              >
+                -
+              </button>
+              <span className="text-lg font-medium text-[#025F4C]">{duration} month{duration > 1 ? 's' : ''}</span>
+              <button
+                onClick={() => handleDurationChange(1)}
+                disabled={duration === 6}
+                className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                  duration === 6 ? 'bg-gray-200 text-gray-400' : 'bg-[#E6F4EA] text-[#3DA647] hover:bg-[#3DA647] hover:text-white'
+                }`}
+              >
+                +
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={() => handleDurationChange(-1)}
+                className={`px-4 py-2 rounded-lg ${
+                  duration === 6 ? 'bg-[#3DA647] text-white' : 'bg-[#E6F4EA] text-[#3DA647]'
+                }`}
+              >
+                6 months
+              </button>
+              <button
+                onClick={() => handleDurationChange(1)}
+                className={`px-4 py-2 rounded-lg ${
+                  duration === 12 ? 'bg-[#3DA647] text-white' : 'bg-[#E6F4EA] text-[#3DA647]'
+                }`}
+              >
+                12 months
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <ul className="space-y-3 mb-8">
+        {features.map((feature, index) => (
+          <li key={index} className="flex items-center text-[#025F4C]">
+            <svg className="w-5 h-5 text-[#3DA647] mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            {feature}
+          </li>
+        ))}
+      </ul>
+
+      <button
+        onClick={() => onSelect({
+          type,
+          dependents,
+          duration,
+          totalPrice: calculateTotalPrice(),
+          title,
+          features
+        })}
+        className="w-full bg-[#3DA647] text-white py-3 rounded-lg font-medium hover:bg-[#218838] transition-colors"
+      >
+        Proceed to Payment
+      </button>
+    </div>
+  );
+};
+
+const PlansSection = () => {
+  const navigate = useNavigate();
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [selectedPlanData, setSelectedPlanData] = useState(null);
+
+  useEffect(() => {
+    // Get selected plan from localStorage
+    const storedPlan = localStorage.getItem('selectedPlan');
+    if (storedPlan) {
+      setSelectedPlanData(JSON.parse(storedPlan));
+    }
+  }, []);
+
+  const handlePlanSelection = (planDetails) => {
+    // Update selected plan with payment details
+    const updatedPlanData = {
+      ...selectedPlanData,
+      dependents: planDetails.dependents,
+      duration: planDetails.duration,
+      totalPrice: planDetails.totalPrice
+    };
+    
+    // Store updated plan details
+    localStorage.setItem('selectedPlan', JSON.stringify(updatedPlanData));
+    
+    // Show success modal
+    setShowSuccessModal(true);
+    
+    // Redirect after 2 seconds
+    setTimeout(() => {
+      setShowSuccessModal(false);
+      navigate('/sponsor');
+    }, 2000);
+  };
+
+  const plans = [
+    {
+      title: selectedPlanData?.planName || "Mama & Papa Health Visit",
+      type: "health-visit",
+      price: selectedPlanData?.price || 60,
+      features: selectedPlanData?.services || [
+        "24/7 Doctor Access",
+        "Unlimited Consultations",
+        "Prescription Management",
+        "Health Records Access",
+        "Emergency Support"
+      ]
+    },
+    {
+      title: "Mama & Papa 360",
+      type: "360",
+      price: selectedPlanData?.price || 200,
+      features: selectedPlanData?.services || [
+        "All Health Visit Features",
+        "Hospital Network Access",
+        "Specialist Consultations",
+        "Annual Health Checkup",
+        "Wellness Programs"
+      ]
+    }
+  ];
+
+  return (
+    <section className="py-20 bg-[#F8FAF9]">
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-[#025F4C] mb-4">
+            Customize Your Plan
           </h2>
-          
-          <p className="text-[#8b909a] text-lg mb-12 max-w-2xl mx-auto">
-            We pay your employee's health care bills so they can save more and spend their salaries on things they love.
+          <p className="text-[#8b909a] text-lg">
+            Adjust the number of dependents and duration for your selected plan
           </p>
         </div>
+
+        <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+          {plans.map((plan) => (
+            <PlanCard
+              key={plan.type}
+              {...plan}
+              onSelect={handlePlanSelection}
+              selectedPlanData={selectedPlanData}
+            />
+          ))}
+        </div>
       </div>
 
-      <div className="relative bg-[#F6921E] w-full">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 pointer-events-none opacity-10">
-          <img src="/images/pattern_lines.svg" alt="" className="w-full h-full object-cover" />
-        </div>
-
-        <div className="max-w-[1800px] mx-auto px-4 py-16">
-          <div 
-            className="flex items-center justify-between gap-4"
-            // onMouseEnter={handleMouseEnter}
-            // onMouseLeave={handleMouseLeave}
-          >
-            {/* Previous Button */}
-            <button 
-              onClick={() => setCurrentSlide(prev => prev === 0 ? slides.length - 1 : prev - 1)}
-              className="flex-shrink-0 w-10 h-10 sm:w-16 sm:h-16 bg-white rounded-full flex items-center justify-center shadow-lg hover:bg-gray-50 transition-colors z-10"
-            >
-              <svg 
-                width="24" 
-                height="24" 
-                viewBox="0 0 24 24" 
-                fill="none"
-                className="w-4 h-4 sm:w-6 sm:h-6"
-              >
-                <path d="M15 19L8 12L15 5" stroke="#F6921E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </button>
-
-            {/* Carousel Container */}
-            <div className="flex-1 overflow-hidden">
-              <div 
-                ref={slideContainerRef}
-                className={`flex gap-2 sm:gap-4 transition-transform duration-700 ${isTransitioning ? 'ease-in-out' : 'duration-0'}`}
-                style={{ transform: `translateX(-${currentSlide * getSlideWidth()}%)` }}
-              >
-                {slides.map((slide, index) => (
-                  <div 
-                    key={`${slide.id}-${index}`}
-                    className="flex-shrink-0 w-full sm:w-1/2 md:w-1/4 aspect-[3/4] relative group"
-                  >
-                    <img
-                      src={slide.image}
-                      alt={slide.alt}
-                      className="w-full h-full object-cover rounded-2xl"
-                    />
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hidden">
-                      <div className="w-16 h-16 bg-white/80 rounded-full flex items-center justify-center">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                          <path d="M10 16.5L16 12L10 7.5V16.5Z" fill="#F6921E"/>
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+      {/* Payment Success Modal */}
+      {showSuccessModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-8 max-w-sm mx-4">
+            <div className="text-center">
+              <div className="w-16 h-16 mx-auto mb-4 bg-[#E6F4EA] rounded-full flex items-center justify-center">
+                <svg className="w-8 h-8 text-[#3DA647]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                </svg>
               </div>
+              <h3 className="text-xl font-semibold text-[#025F4C] mb-2">
+                Payment Successful
+              </h3>
+              <p className="text-[#025F4C]">
+                Redirecting you to add your details...
+              </p>
             </div>
-
-            {/* Next Button */}
-            <button 
-              onClick={() => setCurrentSlide(prev => prev === slides.length - 1 ? 0 : prev + 1)}
-              className="flex-shrink-0 w-10 h-10 sm:w-16 sm:h-16 bg-white rounded-full flex items-center justify-center shadow-lg hover:bg-gray-50 transition-colors z-10"
-            >
-              <svg 
-                width="24" 
-                height="24" 
-                viewBox="0 0 24 24" 
-                fill="none"
-                className="w-4 h-4 sm:w-6 sm:h-6"
-              >
-                <path d="M9 5L16 12L9 19" stroke="#F6921E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </button>
           </div>
         </div>
-      </div>
+      )}
     </section>
   );
 };

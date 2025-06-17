@@ -19,6 +19,11 @@ import PricingSection from './components/PricingSection';
 import FAQSection from './components/FAQSection';
 import DiscoveryCallSection from './components/DiscoveryCallSection';
 import BookingConfirmedSection from './components/BookingConfirmedSection';
+import SponsorPage from './components/SponsorPage';
+import SponsorSuccessPage from './components/SponsorSuccessPage';
+import AddBeneficiaryPage from './components/AddBeneficiaryPage';
+import BeneficiarySuccessPage from './components/BeneficiarySuccessPage';
+import PaymentSuccessPage from './components/PaymentSuccessPage';
 
 const OneWellnessHealthcarePlatformHomepageUpdated = () => {
   return (
@@ -39,16 +44,21 @@ const OneWellnessHealthcarePlatformHomepageUpdated = () => {
                 <AdminSection />
                 <PlansSection /> */}
                 <TestimonialsSection />
-                <StepsSection />
+                {/* <StepsSection /> */}
                 <PricingSection />
                 <DiscoveryCallSection />
-                <ClosingCTASection />
+                {/* <ClosingCTASection /> */}
                 <FAQSection />
               </main>
             </>
           } 
         />
         <Route path="/booking-confirmed" element={<BookingConfirmedSection />} />
+        <Route path="/sponsor" element={<SponsorPage />} />
+        <Route path="/sponsor-success" element={<SponsorSuccessPage />} />
+        <Route path="/add-beneficiary" element={<AddBeneficiaryPage />} />
+        <Route path="/beneficiary-success" element={<BeneficiarySuccessPage />} />
+        <Route path="/payment-success" element={<PaymentSuccessPage />} />
       </Routes>
     </div>
   );

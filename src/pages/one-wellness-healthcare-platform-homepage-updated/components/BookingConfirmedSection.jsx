@@ -5,8 +5,8 @@ const BookingConfirmedSection = () => {
   const navigate = useNavigate();
 
   return (
-    <section className="w-full min-h-screen flex justify-center items-center bg-transparent px-4 py-16">
-      <div className="w-full max-w-[550px] bg-[#025F4C] rounded-3xl text-center pt-12 pb-6">
+    <section className="w-full min-h-screen flex justify-center items-center bg-transparent px-0 md:py-24 pt-24">
+      <div className="w-full max-w-[550px] bg-[#025F4C] md:rounded-3xl text-center pt-4 md:pt-16 pb-6">
         <div className="mb-8">
           <div className="w-40 h-40 mx-auto mb-6">
             <svg
@@ -733,7 +733,7 @@ const BookingConfirmedSection = () => {
               className="w-full h-full rounded-full object-cover"
             /> */}
           </div>
-          <h2 className="text-white text-xl font-semibold mb-4">Booking with Victoria confirmed.</h2>
+          <h2 className="text-white text-xl font-semibold mb-4 text-center max-w-[300px] mx-auto">Booking with Victoria confirmed.</h2>
           <p className="text-[#E6F4EA] text-sm px-4 w-full md:w-[380px] mx-auto">
             Your booking with Victoria was successful. <br /> You can skip 26 lines in the queue and just
             chat with Victoria immediately using the link below
@@ -752,8 +752,8 @@ const BookingConfirmedSection = () => {
           <p className="text-[#E6F4EA] text-sm mt-2">Typically responds within 15 minutes.</p>
         </div>
 
-        <div className="px-6 mt-32">
-          <div className="bg-[#E6EFED33] rounded-lg py-4 flex justify-between items-center px-4">
+        <div className="px-6 mt-16 md:mt-32">
+          <div className="bg-[#E6EFED33] rounded-lg py-4 flex flex-col md:flex-row gap-4 md:gap-0 justify-between items-center px-4">
             <span className="text-[#FFFFFF] text-sm">
               Or just buy a 360 or trial offer plan for mama or papa right away ↑
             </span>

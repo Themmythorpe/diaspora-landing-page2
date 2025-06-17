@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { PlayIcon, PauseIcon } from '@heroicons/react/24/outline';
 
 const TestimonialsSection = () => {
   const testimonials = [
@@ -26,6 +27,20 @@ const TestimonialsSection = () => {
   ];
 
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [videoWidth, setVideoWidth] = useState(420);
+  const videoRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const playPause = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (video.paused) video.play();
+    else video.pause();
+    setIsPlaying(!isPlaying);
+  };
+  const makeBig = () => setVideoWidth(560);
+  const makeSmall = () => setVideoWidth(320);
+  const makeNormal = () => setVideoWidth(420);
 
   const handlePrevious = () => {
     setCurrentIndex((prevIndex) => 
@@ -39,72 +54,68 @@ const TestimonialsSection = () => {
     );
   };
 
+  useEffect(() => {
+    if (isPlaying) {
+      videoRef.current.play();
+    } else {
+      videoRef.current.pause();
+    }
+  }, [isPlaying]);
+
   return (
-    <section id="testimonials" className="py-20 bg-[#FDF8F3]">
-      <div className="container mx-auto px-4">
-        <div className="max-w-7xl mx-auto">
-          {/* Header */}
-          <div className="mb-12">
+    <section id="testimonials" className="pb-5 bg-transparent">
+      <div className="container mx-auto px-">
+      <div className="space-y-20 bg-[#FCF4EB] rounded-3xl px-10 py-10">
+      {/* Header */}
+          {/* <div className="mb-12">
             <p className="text-gray-600 text-lg mb-4">See what our customers are saying</p>
             <h2 className="text-[#0A4B35] text-3xl md:text-5xl font-bold">
               Don't Take Our<br />
               Word for It
             </h2>
-          </div>
+          </div> */}
 
           {/* Testimonial Content */}
-          <div className="flex flex-col lg:flex-row items-center gap-16">
-            {/* Testimonial Text */}
-            <div className="w-full lg:w-1/2">
-              <div className="relative">
-                <blockquote className="text-gray-600 text-xl leading-relaxed mb-8">
-                  {testimonials[currentIndex].content}
-                </blockquote>
-                
-                <div className="mb-8">
-                  <h4 className="text-[#0A4B35] text-xl font-bold">
-                    {testimonials[currentIndex].name}
-                  </h4>
-                  <p className="text-gray-600">
-                    {testimonials[currentIndex].role}
-                  </p>
-                </div>
+          <div className="w-full max-w-4xl mx-auto rounded-3xl flex flex-col items-center justify-center px-4 py-10 relative">
+              <div className="flex flex-col items-center rounded-full bg-[#025F4C33] text-[#176B1B] text-xs font-semibold px-4 py-2 mb-4"
+              style={{
+                letterSpacing: '0.15em',
+              }}>
+                WANT MORE DETAILS?
+              </div>
+              <div className="text-[#176B1B] text-xl md:text-3xl text-center font-semibold mb-7">
+                Victoria will explain everything
+              </div>
+              {/* Video Controls */}
+              <div className="flex flex-col items-center w-full mb-4">
+                {/* <div className="flex flex-wrap justify-center gap-2 mb-3">
+                  <button onClick={playPause} className="px-4 py-2 bg-[#3DA647] text-white rounded-md text-xs font-medium hover:bg-[#218838] transition">Play/Pause</button>
+                  <button onClick={makeBig} className="px-4 py-2 bg-[#E6F4EA] text-[#025F4C] rounded-md text-xs font-medium border border-[#3DA647] hover:bg-[#3DA647] hover:text-white transition">Big</button>
+                  <button onClick={makeSmall} className="px-4 py-2 bg-[#E6F4EA] text-[#025F4C] rounded-md text-xs font-medium border border-[#3DA647] hover:bg-[#3DA647] hover:text-white transition">Small</button>
+                  <button onClick={makeNormal} className="px-4 py-2 bg-[#E6F4EA] text-[#025F4C] rounded-md text-xs font-medium border border-[#3DA647] hover:bg-[#3DA647] hover:text-white transition">Normal</button>
+                </div> */}
 
-                {/* Navigation Buttons */}
-                <div className="flex gap-4">
-                  <button
-                    onClick={handlePrevious}
-                    className="p-3 border border-gray-300 rounded-full hover:bg-gray-100 transition-colors"
-                    aria-label="Previous testimonial"
-                  >
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                      <path d="M15 19l-7-7 7-7" stroke="#0A4B35" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
+                <div className="relative w-fit mx-auto border" onClick={playPause}>
+                <video
+                  id="video1"
+                  ref={videoRef}
+                  width={videoWidth}
+                  className="mx-auto w-full h-auto max-h-[500px] rounded-lg border border-[#E6F4EA]"
+                  src="/videos/landpage_video.mp4"
+                  autoPlay
+                  loop={false}
+                  // controls
+                >
+                  Your browser does not support HTML video.
+                </video>
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                  <button onClick={playPause} className={`cursor-pointer z-50 w-12 h-12 flex items-center justify-center ${isPlaying ? 'bg-transparent border border-[#FFFFFF] text-[#FFFFFF]' : 'bg-[#3DA647] text-white'} rounded-full text-xs font-medium  transition`}>
+                    {isPlaying ? <PauseIcon className="w-6 h-6" /> : <PlayIcon className="w-6 h-6" />}
                   </button>
-                  <button
-                    onClick={handleNext}
-                    className="p-3 border border-gray-300 rounded-full hover:bg-gray-100 transition-colors"
-                    aria-label="Next testimonial"
-                  >
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                      <path d="M9 5l7 7-7 7" stroke="#0A4B35" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </button>
+                  </div>
                 </div>
               </div>
             </div>
-
-            {/* Testimonial Image */}
-            <div className="w-full lg:w-1/2">
-              <div className="relative aspect-[4/3] rounded-2xl overflow-hidden">
-                <img
-                  src={testimonials[currentIndex].image}
-                  alt={testimonials[currentIndex].name}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </section>

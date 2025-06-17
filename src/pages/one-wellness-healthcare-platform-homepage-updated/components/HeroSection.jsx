@@ -1,60 +1,43 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 const HeroSection = () => {
   return (
-    <section className="relative min-h-screen bg-white overflow-hidden">
-      <div className="container mx-auto px-4 pt-32 md:py-32">
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
-          {/* Left Content */}
-          <div className="w-full lg:w-1/2 z-10">
-            <h1 className="text-[#0A4B35] text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
-              Send health home
-              <br />
-              without stress.
-            </h1>
-
-            <p className="text-gray-600 text-lg md:text-xl mb-10 max-w-[600px]">
-              A one-stop solution for your loved ones back home to access affordable healthcare
-              without the worry of payment. Stay informed by tracking your dependent's activities,
-              risk levels, and overall health.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-4">
-              <a
-                  href="#chat-with-our-expert"
-                className="inline-flex cursor-pointer items-center justify-center px-8 py-4 bg-white border-2 border-[#28A745] text-[#28A745] rounded-full font-semibold hover:bg-[#28A745] hover:text-white transition-colors duration-300"
-              >
-                <svg className="w-6 h-6 mr-2" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-                </svg>
-                Talk to our expert
-              </a>
-
-              <a
-                href="#pricing"
-                className="inline-flex items-center justify-center px-8 py-4 bg-[#28A745] text-white rounded-full font-semibold hover:bg-[#218838] transition-colors duration-300"
-              >
-                Check our health plans
-              </a>
+    <section className="w-full flex justify-center bg-white px-3 pb-1 pt-24">
+      <div className="container bg-[#025F4C] rounded-3xl px-4 md:px-10 py-12 md:py-20 flex flex-col md:flex-row items-center relative overflow-hidden">
+        {/* Left Content */}
+        <div className="flex-1 z-10">
+          <div className="mb-4">
+            <span className="inline-block bg-[#2A8774] text-white text-xs font-semibold px-4 py-2 rounded-full tracking-widest">FOR AFRICANS LIVING ABROAD</span>
+          </div>
+          <h1 className="text-white text-3xl md:text-4xl font-semibold leading-tight mb-4 max-w-xl">
+            The Eyes, Ears and Hands You Wish You Had Back Home
+          </h1>
+          <p className="text-white text-sm mb-8 max-w-lg">
+            Give Your Parents The Care They Deserve - With Proof It's Getting Done Right
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 mb-8">
+            <a href="#chat-with-our-expert" className="px-8 py-3 text-center text-sm bg-[#28A745] text-white rounded-lg font-normal hover:bg-[#218838] transition">Talk to our expert</a>
+            <a href="#pricing" className="px-8 py-3 text-center text-sm border border-white text-white rounded-lg font-normal hover:bg-white hover:text-[#11694A] transition">Check our health plans</a>
+          </div>
+          <div className="flex gap-10 mt-6">
+            <div>
+              <div className="text-[#3DA647] text-lg font-bold">Western</div>
+              <div className="text-white text-sm">Standards Procedures</div>
+            </div>
+            <div>
+              <div className="text-[#3DA647] text-lg font-bold">10/10</div>
+              <div className="text-white text-sm">Rated Service</div>
             </div>
           </div>
-
-          {/* Right Image */}
-          <div className="w-full lg:w-1/2 relative">
-            <div className="relative">
-              <img
-                src="/images/section_three_img06.png"
-                alt="Healthcare worker caring for elderly patient"
-                className="relative z-10 w-[450px] h-auto object-cover"
-              />
-            </div>
-            {/* Decorative curved arrow */}
-            <img
-              src="/images/curved-arrow.png"
-              alt=""
-              className="absolute -left-60 bottom-6 w-48 opacity-50"
-            />
+        </div>
+        {/* Right Image & Avatars */}
+        <div className="flex-1 flex justify-center items-center relative mt-10 md:mt-0">
+          <div className="relative">
+            <img src="/photos/hero_sect_img.png" alt="Nurse with elderly woman" className="rounded-2xl w-[350px] md:w-[400px] lg:w-[420px] z-10 relative" />
+            {/* Avatars */}
+            {/* <img src="/images/avatar1.png" alt="avatar1" className="absolute -top-10 -left-10 w-24 h-24 rounded-full border-4 border-white shadow-md" />
+            <img src="/images/avatar2.png" alt="avatar2" className="absolute top-1/2 -right-12 w-24 h-24 rounded-full border-4 border-white shadow-md" style={{transform: 'translateY(-50%)'}} />
+            <img src="/images/avatar3.png" alt="avatar3" className="absolute -bottom-10 left-1/2 w-24 h-24 rounded-full border-4 border-white shadow-md" style={{transform: 'translateX(-50%)'}} /> */}
           </div>
         </div>
       </div>
