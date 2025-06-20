@@ -64,83 +64,64 @@ const ChoosePlanPage = () => {
   }, []);
 
   const handlePlanSelect = (plan) => {
-    // Get default duration based on plan
-    const defaultDuration = plan.id === 40 ? 6 : 2;
-    const defaultDurationId = plan.durations.find(d => 
-      d.num_days === (defaultDuration === 6 ? 182 : 60)
-    )?.id;
-
+    const firstDuration = plan.durations[0];
     const newPlan = {
       ...plan,
-      duration: defaultDuration,
-      numberOfDependents: 1,
-      selectedDurationId: defaultDurationId
+      duration: firstDuration.num_days,
+      selectedDurationId: firstDuration.id
     };
-    
     setSelectedPlan(newPlan);
-    setDuration(defaultDuration);
+    setDuration(firstDuration.num_days);
     setNumberOfDependents(1);
-    
+
     // Save to localStorage
     const planData = {
       id: plan.id,
       name: plan.name,
-      duration: defaultDuration,
+      duration: firstDuration.num_days,
       numberOfDependents: 1,
-      selectedDurationId: defaultDurationId,
-      price: plan.durations.find(d => d.id === defaultDurationId)?.pivot?.usd_amount || 0,
-      period: plan.durations.find(d => d.id === defaultDurationId)?.name || 'month',
-      total: plan.durations.find(d => d.id === defaultDurationId)?.pivot?.usd_amount || 0
+      selectedDurationId: firstDuration.id,
+      price: firstDuration.pivot?.usd_amount || 0,
+      period: firstDuration.name || 'month',
+      total: firstDuration.pivot?.usd_amount || 0
     };
     localStorage.setItem('selectedPlan', JSON.stringify(planData));
   };
 
   const incrementDuration = () => {
     if (!selectedPlan) return;
-    
-    const availableDurations = selectedPlan.durations.map(d => d.num_days === 365 ? 12 : d.num_days === 182 ? 6 : 2).sort((a, b) => a - b);
-    const nextDuration = availableDurations.find(d => d > duration);
-    
-    if (nextDuration) {
-      const nextDurationId = selectedPlan.durations.find(d => 
-        d.num_days === (nextDuration === 12 ? 365 : nextDuration === 6 ? 182 : 60)
-      )?.id;
-
-      setDuration(nextDuration);
+    const idx = selectedPlan.durations.findIndex(d => d.id === selectedPlan.selectedDurationId);
+    if (idx < selectedPlan.durations.length - 1) {
+      const nextDuration = selectedPlan.durations[idx + 1];
+      setDuration(nextDuration.num_days);
       setSelectedPlan(prev => ({
         ...prev,
-        duration: nextDuration,
-        selectedDurationId: nextDurationId
+        duration: nextDuration.num_days,
+        selectedDurationId: nextDuration.id
       }));
-      updateLocalStorage({ 
-        duration: nextDuration,
-        selectedDurationId: nextDurationId,
-        price: selectedPlan.durations.find(d => d.id === nextDurationId)?.pivot?.usd_amount || 0
+      updateLocalStorage({
+        duration: nextDuration.num_days,
+        selectedDurationId: nextDuration.id,
+        price: nextDuration.pivot?.usd_amount || 0
       });
     }
   };
 
   const decrementDuration = () => {
     if (!selectedPlan) return;
-    
-    const availableDurations = selectedPlan.durations.map(d => d.num_days === 365 ? 12 : d.num_days === 182 ? 6 : 2).sort((a, b) => a - b);
-    const prevDuration = [...availableDurations].reverse().find(d => d < duration);
-    
-    if (prevDuration) {
-      const prevDurationId = selectedPlan.durations.find(d => 
-        d.num_days === (prevDuration === 12 ? 365 : prevDuration === 6 ? 182 : 60)
-      )?.id;
-
-      setDuration(prevDuration);
+    const idx = selectedPlan.durations.findIndex(d => d.id === selectedPlan.selectedDurationId);
+    if (idx > 0) {
+      const prevDuration = selectedPlan.durations[idx - 1];
+      setDuration(prevDuration.num_days);
       setSelectedPlan(prev => ({
         ...prev,
-        duration: prevDuration,
-        selectedDurationId: prevDurationId
+        duration: prevDuration.num_days,
+        selectedDurationId: prevDuration.id
       }));
-      updateLocalStorage({ 
-        duration: prevDuration,
-        selectedDurationId: prevDurationId,
-        price: selectedPlan.durations.find(d => d.id === prevDurationId)?.pivot?.usd_amount || 0
+      updateLocalStorage({
+        duration: prevDuration.num_days,
+        selectedDurationId: prevDuration.id,
+        price: prevDuration.pivot?.usd_amount || 0
       });
     }
   };
@@ -183,6 +164,10 @@ const ChoosePlanPage = () => {
     return durationPrice;
   };
 
+  const getCurrentDurationObj = () => {
+    if (!selectedPlan) return null;
+    return selectedPlan.durations.find(d => d.id === selectedPlan.selectedDurationId) || selectedPlan.durations[0];
+  };
 
   const handleDependentChange = (e) => {
     const value = Number(e.target.value);
@@ -249,19 +234,25 @@ const ChoosePlanPage = () => {
                 <button
                   onClick={decrementDuration}
                   className={`w-10 h-10 flex items-center justify-center text-[#025F4C] focus:outline-none bg-white border border-[#E6F4EA] rounded-full ${
-                    duration > (selectedPlan.id === 40 ? 6 : 2) ? 'hover:text-[#3DA647]' : 'opacity-50 cursor-not-allowed'
+                    selectedPlan.durations.findIndex(d => d.id === selectedPlan.selectedDurationId) > 0
+                      ? 'hover:text-[#3DA647]'
+                      : 'opacity-50 cursor-not-allowed'
                   }`}
-                  disabled={!selectedPlan.durations.some(d => (d.num_days === 365 ? 12 : d.num_days === 182 ? 6 : 2) < duration)}
+                  disabled={selectedPlan.durations.findIndex(d => d.id === selectedPlan.selectedDurationId) === 0}
                 >
                   <span className="text-2xl">−</span>
                 </button>
-                <span className="text-lg font-bold text-[#025F4C] px-2">{duration} Months</span>
+                <span className="text-lg font-bold text-[#025F4C] px-2">
+                  {getCurrentDurationObj()?.months ? `${getCurrentDurationObj().months} months` : `${getCurrentDurationObj()?.num_days} days`}
+                </span>
                 <button
                   onClick={incrementDuration}
                   className={`w-10 h-10 flex items-center justify-center text-[#025F4C] focus:outline-none bg-white border border-[#E6F4EA] rounded-full ${
-                    duration < (selectedPlan.id === 40 ? 12 : 6) ? 'hover:text-[#3DA647]' : 'opacity-50 cursor-not-allowed'
+                    selectedPlan.durations.findIndex(d => d.id === selectedPlan.selectedDurationId) < selectedPlan.durations.length - 1
+                      ? 'hover:text-[#3DA647]'
+                      : 'opacity-50 cursor-not-allowed'
                   }`}
-                  disabled={!selectedPlan.durations.some(d => (d.num_days === 365 ? 12 : d.num_days === 182 ? 6 : 2) > duration)}
+                  disabled={selectedPlan.durations.findIndex(d => d.id === selectedPlan.selectedDurationId) === selectedPlan.durations.length - 1}
                 >
                   <span className="text-2xl">+</span>
                 </button>
@@ -312,9 +303,9 @@ const ChoosePlanPage = () => {
               <span className="text-[#025F4C] font-medium">Total</span>
               <span className="text-[#3DA647] font-bold">
                 ${calculateTotal()} 
-                <span className="text-sm text-[#025F4C] ml-1">
+                {/* <span className="text-sm text-[#025F4C] ml-1">
                   ({duration} months)
-                </span>
+                </span> */}
               </span>
             </div>
           )}
