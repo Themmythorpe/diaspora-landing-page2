@@ -243,7 +243,7 @@ const ChoosePlanPage = () => {
                   <span className="text-2xl">−</span>
                 </button>
                 <span className="text-lg font-bold text-[#025F4C] px-2">
-                  {getCurrentDurationObj()?.months ? `${getCurrentDurationObj().months} months` : `${getCurrentDurationObj()?.num_days} days`}
+                  {getCurrentDurationObj()?.months ? `${getCurrentDurationObj().months}` : `${getCurrentDurationObj()?.num_days} days`}
                 </span>
                 <button
                   onClick={incrementDuration}
@@ -304,7 +304,7 @@ const ChoosePlanPage = () => {
               <span className="text-[#3DA647] font-bold">
                 ${calculateTotal()} 
                 {/* <span className="text-sm text-[#025F4C] ml-1">
-                  ({duration} months)
+                  ({duration})
                 </span> */}
               </span>
             </div>
