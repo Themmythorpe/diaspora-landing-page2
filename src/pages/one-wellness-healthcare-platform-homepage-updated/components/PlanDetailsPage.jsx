@@ -187,6 +187,11 @@ const PlanDetailsPage = () => {
   // Get the features based on the plan name
   const planFeatures = plan.services.map(service => service.name) || features[plan.name] || [];
 
+  // Find the selected duration object from fullData.durations
+  const selectedDuration = plan.fullData?.durations?.find(
+    (d) => d.id === plan.duration_id
+  );
+
   return (
     <div className="min-h-screen bg-[#025F4C] md:pb-12 px-0 flex items-center justify-center pt-24">
       <div className="container mx-auto max-w-6xl">
@@ -237,7 +242,7 @@ const PlanDetailsPage = () => {
                   <div className="flex justify-between items-center">
                     <span className="text-[#025F4C]">Duration:</span>
                     <span className="font-semibold text-[#025F4C]">
-                      {plan.duration} {plan.duration > 1 ? 'months' : 'month'}
+                      {selectedDuration ? selectedDuration.months : `${plan.duration} month${plan.duration > 1 ? 's' : ''}`}
                     </span>
                   </div>
                   <div className="flex justify-between items-center">
