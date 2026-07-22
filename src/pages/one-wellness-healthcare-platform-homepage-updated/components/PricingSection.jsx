@@ -159,7 +159,7 @@ const PricingSection = () => {
                             : 'bg-[#F4F4F4] text-[#0A4B35]'
                         }`}
                     >
-                      {duration.name === 'annually' ? '12 Months' : '6 Months'}
+                      {duration.months}
                     </span>
                   ))}
                 </div>
